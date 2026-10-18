@@ -8,6 +8,10 @@ import Maintenance from "./pages/errors/Maintenance";
 import logoSmk from "./assets/img/logo-smk.png";
 
 import Home from "./pages/website/Home/Home";
+import PplgSection from "./pages/website/majors/PplgSection"
+import BdSection from "./pages/website/majors/BdSection";
+import TjktSection from "./pages/website/majors/TjktSection";
+import DkvSection from "./pages/website/majors/DkvSection";
 
 
 interface PlaceholderPageProps {
@@ -35,38 +39,6 @@ const PlaceholderPage = ({ title }: PlaceholderPageProps): ReactElement => (
   </div>
 );
 
-const BerkasSiswa = (): ReactElement => (
-  <div className="p-6 font-semibold text-lg font-cabinet bg-white text-gray-800 min-h-screen">Halaman Berkas Persyaratan</div>
-);
-const PembayaranSiswa = (): ReactElement => (
-  <div className="p-6 font-semibold text-lg font-cabinet bg-white text-gray-800 min-h-screen">Halaman Pembayaran</div>
-);
-const PengumumanSiswa = (): ReactElement => (
-  <div className="p-6 font-semibold text-lg font-cabinet bg-white text-gray-800 min-h-screen">Halaman Status & Pengumuman Seleksi</div>
-);
-const ProfileSiswa = (): ReactElement => (
-  <div className="p-6 font-semibold text-lg font-cabinet bg-white text-gray-800 min-h-screen">Halaman Edit Pengaturan Profil Siswa</div>
-);
-
-const KelolaPendaftaran = (): ReactElement => (
-  <div className="p-6 font-semibold text-lg font-cabinet bg-white text-gray-800 min-h-screen">Halaman Kelola Pendaftaran</div>
-);
-const KelolaPembayaran = (): ReactElement => (
-  <div className="p-6 font-semibold text-lg font-cabinet bg-white text-gray-800 min-h-screen">Halaman Kelola Pembayaran</div>
-);
-const KelolaJurusan = (): ReactElement => (
-  <div className="p-6 font-semibold text-lg font-cabinet bg-white text-gray-800 min-h-screen">Halaman Kelola Jurusan</div>
-);
-const LaporanAdmin = (): ReactElement => (
-  <div className="p-6 font-semibold text-lg font-cabinet bg-white text-gray-800 min-h-screen">Halaman Laporan Data Siswa</div>
-);
-const PublikasiAdmin = (): ReactElement => (
-  <div className="p-6 font-semibold text-lg font-cabinet bg-white text-gray-800 min-h-screen">Halaman Publikasi Hasil Seleksi</div>
-);
-const ProfileAdmin = (): ReactElement => (
-  <div className="p-6 font-semibold text-lg font-cabinet bg-white text-gray-800 min-h-screen">Halaman Edit Pengaturan Profil Admin</div>
-);
-
 export default function App(): ReactElement {
   return (
     <Routes>
@@ -75,30 +47,20 @@ export default function App(): ReactElement {
         <Route path="/Profile/Organizational" element={<PlaceholderPage title="Struktur Organisasi" />} />
         <Route path="/Profile/Facilities" element={<PlaceholderPage title="Fasilitas & Sarpras" />} />
         <Route path="/Profile/Accreditation" element={<PlaceholderPage title="Akreditasi Sekolah" />} />
-        <Route path="/Majors/Pplg" element={<PlaceholderPage title="PPLG (Pengembangan Perangkat Lunak dan Gim)" />} />
-        <Route path="/Majors/Dkv" element={<PlaceholderPage title="DKV (Desain Komunikasi Visual)" />} />
-        <Route path="/Majors/Tjkt" element={<PlaceholderPage title="TJKT (Teknik Jaringan Komputer dan Telekomunikasi)" />} />
-        <Route path="/Majors/Bd" element={<PlaceholderPage title="Bisnis Digital" />} />
+
+        <Route path="/Majors/Pplg" element={<PplgSection/>} />
+        <Route path="/Majors/Dkv" element={<DkvSection/>} />
+        <Route path="/Majors/Tjkt" element={<TjktSection/>} />
+        <Route path="/Majors/Bd" element={<BdSection/>} />
+
         <Route path="/StudentAffairs/Achievements" element={<PlaceholderPage title="Prestasi Siswa" />} />
         <Route path="/StudentAffairs/Extracurriculars" element={<PlaceholderPage title="Ekstrakurikuler" />} />
         <Route path="/StudentAffairs/Scholarships" element={<PlaceholderPage title="Informasi Beasiswa" />} />
-        
+
         <Route path="/access-denied" element={<AccessDenied />} />
         <Route path="/maintenance" element={<Maintenance />} />
         <Route path="*" element={<NotFound />} />
       </Route>
-
-      <Route path="/login" element={<PlaceholderPage title="Halaman Login / Pendaftaran SPMB" />} />
-      <Route path="/siswa/berkas" element={<BerkasSiswa />} />
-      <Route path="/siswa/pembayaran" element={<PembayaranSiswa />} />
-      <Route path="/siswa/pengumuman" element={<PengumumanSiswa />} />
-      <Route path="/siswa/profile" element={<ProfileSiswa />} />
-      <Route path="/portal-panitia-spmb/pendaftaran" element={<KelolaPendaftaran />} />
-      <Route path="/portal-panitia-spmb/pembayaran" element={<KelolaPembayaran />} />
-      <Route path="/portal-panitia-spmb/jurusan" element={<KelolaJurusan />} />
-      <Route path="/portal-panitia-spmb/laporan" element={<LaporanAdmin />} />
-      <Route path="/portal-panitia-spmb/publikasi" element={<PublikasiAdmin />} />
-      <Route path="/portal-panitia-spmb/profile" element={<ProfileAdmin />} />
     </Routes>
   );
 }

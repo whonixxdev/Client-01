@@ -5,7 +5,7 @@ import logoSmk from "../../../assets/img/logo-smk.png";
 
 export default function FooterSekolah(): ReactElement {
   return (
-    <footer className="w-full bg-blue-600 text-white font-cabinet">
+    <footer className="w-full bg-blue-800 text-white font-cabinet">
       <div className="mx-auto max-w-7xl px-5 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
           <div className="lg:col-span-4 space-y-4">
