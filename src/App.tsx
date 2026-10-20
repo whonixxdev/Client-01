@@ -8,6 +8,16 @@ import Maintenance from "./pages/errors/Maintenance";
 import logoSmk from "./assets/img/logo-smk.png";
 
 import Home from "./pages/website/Home/Home";
+import BdSection from "./pages/website/majors/BdSection";
+import DkvSection from "./pages/website/majors/DkvSection";
+import PplgSection from "./pages/website/majors/PplgSection";
+import TjktSection from "./pages/website/majors/TjktSection";
+
+// memanggil fitur login, register, otp, forgetpassword
+import ForgetPasswordForm from "./pages/auth/ForgetPasswordForm";
+import LoginForm from "./pages/auth/LoginForm";
+import OtpForm from "./pages/auth/OtpForm";
+import RegisterForm from "./pages/auth/RegisterForm";
 
 
 interface PlaceholderPageProps {
@@ -58,6 +68,10 @@ export default function App(): ReactElement {
         <Route path="*" element={<NotFound />} />
       </Route>
 
+      <Route path="/login" element={<LoginForm />} />
+      <Route path="/register" element={<RegisterForm />} />
+      <Route path="/forgot-password" element={<ForgetPasswordForm />} />
+      <Route path="/otp" element={<OtpForm />} />
         
     </Routes>
   );

@@ -24,7 +24,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<UserData | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  
 
   useEffect(() => {
     const initAuth = async () => {
@@ -80,7 +79,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       await logoutUser();
     } catch {
-      // Hapus data lokal meskipun request gagal
+      // Hapus data lokal meskipun request logout gagal
     } finally {
       localStorage.removeItem("auth_token");
       localStorage.removeItem("user_role");

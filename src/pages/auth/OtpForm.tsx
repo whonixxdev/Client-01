@@ -6,7 +6,7 @@ import {
   forgotPasswordSendOtp,
   registerVerifyOtp,
   registerSendOtp,
-} from "../../services/api";
+} from "../../services/Api";
 
 export default function OtpForm() {
   const navigate = useNavigate();
