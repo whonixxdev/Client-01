@@ -8,6 +8,10 @@ import Maintenance from "./pages/errors/Maintenance";
 import logoSmk from "./assets/img/logo-smk.png";
 
 import Home from "./pages/website/Home/Home";
+import LoginForm from "./pages/auth/LoginForm";
+import RegisterForm from "./pages/auth/RegisterForm";
+import ForgetPasswordForm from "./pages/auth/ForgerPasswordForm";
+import OtpForm from "./pages/auth/OtpForm";
 
 
 interface PlaceholderPageProps {
@@ -88,7 +92,12 @@ export default function App(): ReactElement {
         <Route path="*" element={<NotFound />} />
       </Route>
 
-      <Route path="/login" element={<PlaceholderPage title="Halaman Login / Pendaftaran SPMB" />} />
+      <Route path="/login" element={<LoginForm />} />
+      <Route path="/register" element={<RegisterForm />} />
+      <Route path="/forgot-password" element={<ForgetPasswordForm />} />
+      <Route path="/otp" element={<OtpForm />} />
+
+
       <Route path="/siswa/berkas" element={<BerkasSiswa />} />
       <Route path="/siswa/pembayaran" element={<PembayaranSiswa />} />
       <Route path="/siswa/pengumuman" element={<PengumumanSiswa />} />

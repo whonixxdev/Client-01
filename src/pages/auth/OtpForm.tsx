@@ -42,7 +42,7 @@ export default function OtpForm() {
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    index: number
+    index: number,
   ) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       const prevInput = document.getElementById(`otp-input-${index - 1}`);
@@ -87,7 +87,9 @@ export default function OtpForm() {
     } catch (err: any) {
       console.error("OTP Error:", err);
       setErrorMessage(
-        err.response?.data?.message || err.message || "Kode OTP salah atau kedaluwarsa."
+        err.response?.data?.message ||
+          err.message ||
+          "Kode OTP salah atau kedaluwarsa.",
       );
     } finally {
       setLoading(false);
@@ -111,7 +113,11 @@ export default function OtpForm() {
       }
       setSuccessMessage("Kode OTP baru berhasil dikirim!");
     } catch (err: any) {
-      setErrorMessage("Gagal mengirim ulang OTP.");
+      setErrorMessage(
+        err.response?.data?.message ||
+          err.message ||
+          "Gagal mengirim ulang OTP.",
+      );
     } finally {
       setResendLoading(false);
     }
@@ -138,7 +144,9 @@ export default function OtpForm() {
         </div>
 
         <div className="w-full text-center">
-          <h2 className="text-xl font-bold text-[#204382] mb-2">Verifikasi OTP</h2>
+          <h2 className="text-xl font-bold text-[#204382] mb-2">
+            Verifikasi OTP
+          </h2>
           <p className="text-xs text-gray-600 mb-6 px-2">
             Kami sudah mengirim kode OTP ke email{" "}
             <span className="font-semibold text-gray-800">
