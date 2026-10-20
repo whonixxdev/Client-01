@@ -8,10 +8,6 @@ import Maintenance from "./pages/errors/Maintenance";
 import logoSmk from "./assets/img/logo-smk.png";
 
 import Home from "./pages/website/Home/Home";
-import PplgSection from "./pages/website/majors/PplgSection"
-import BdSection from "./pages/website/majors/BdSection";
-import TjktSection from "./pages/website/majors/TjktSection";
-import DkvSection from "./pages/website/majors/DkvSection";
 
 
 interface PlaceholderPageProps {
@@ -61,6 +57,8 @@ export default function App(): ReactElement {
         <Route path="/maintenance" element={<Maintenance />} />
         <Route path="*" element={<NotFound />} />
       </Route>
+
+        
     </Routes>
   );
 }
