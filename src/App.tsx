@@ -1,7 +1,8 @@
 import type { ReactElement } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, Navigate } from "react-router-dom";
 import { FiHome } from "react-icons/fi";
 import MainLayout from "./components/layouts/MainLayout";
+import DashboardLayout from "./components/layouts/Dashboardlayout";
 import NotFound from "./pages/errors/NotFound";
 import AccessDenied from "./pages/errors/AccessDenied";
 import Maintenance from "./pages/errors/Maintenance";
@@ -13,12 +14,12 @@ import DkvSection from "./pages/website/majors/DkvSection";
 import PplgSection from "./pages/website/majors/PplgSection";
 import TjktSection from "./pages/website/majors/TjktSection";
 
-// memanggil fitur login, register, otp, forgetpassword
 import ForgetPasswordForm from "./pages/auth/ForgetPasswordForm";
 import LoginForm from "./pages/auth/LoginForm";
 import OtpForm from "./pages/auth/OtpForm";
 import RegisterForm from "./pages/auth/RegisterForm";
-
+import { PanitiaRoute } from "./pages/auth/PanitiaGuard";
+import BerandaAdmin from "./pages/dashboard/admin/beranda/BerandaAdmin";
 
 interface PlaceholderPageProps {
   readonly title: string;
@@ -54,10 +55,10 @@ export default function App(): ReactElement {
         <Route path="/Profile/Facilities" element={<PlaceholderPage title="Fasilitas & Sarpras" />} />
         <Route path="/Profile/Accreditation" element={<PlaceholderPage title="Akreditasi Sekolah" />} />
 
-        <Route path="/Majors/Pplg" element={<PplgSection/>} />
-        <Route path="/Majors/Dkv" element={<DkvSection/>} />
-        <Route path="/Majors/Tjkt" element={<TjktSection/>} />
-        <Route path="/Majors/Bd" element={<BdSection/>} />
+        <Route path="/Majors/Pplg" element={<PplgSection />} />
+        <Route path="/Majors/Dkv" element={<DkvSection />} />
+        <Route path="/Majors/Tjkt" element={<TjktSection />} />
+        <Route path="/Majors/Bd" element={<BdSection />} />
 
         <Route path="/StudentAffairs/Achievements" element={<PlaceholderPage title="Prestasi Siswa" />} />
         <Route path="/StudentAffairs/Extracurriculars" element={<PlaceholderPage title="Ekstrakurikuler" />} />
@@ -72,7 +73,16 @@ export default function App(): ReactElement {
       <Route path="/register" element={<RegisterForm />} />
       <Route path="/forgot-password" element={<ForgetPasswordForm />} />
       <Route path="/otp" element={<OtpForm />} />
-        
+
+      <Route element={<PanitiaRoute />}>
+        <Route
+          path="/portal-panitia-spmb"
+          element={<DashboardLayout userRole="admin" />}
+        >
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<BerandaAdmin />} />
+        </Route>
+      </Route>
     </Routes>
   );
 }
