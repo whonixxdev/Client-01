@@ -23,6 +23,8 @@ import {
 } from "react-icons/fi";
 import { LuGraduationCap } from "react-icons/lu";
 import logoSmk from "../../../assets/img/logo-smk.png";
+import { useAuth } from "../../../context/AuthContext"; // Mengambil hook autentikasi untuk verifikasi token user
+import { GiLipstick } from "react-icons/gi";
 
 interface MenuItem {
   readonly title: string;
@@ -115,6 +117,12 @@ const navbarData: readonly NavItem[] = [
             href: "/Majors/Bd",
             icon: FiTrendingUp,
           },
+          {
+            title: "TK",
+            desc: "tata kecantikan",
+            href: "/Majors/Tk",
+            icon: GiLipstick,
+          },
         ],
       },
     ],
@@ -162,6 +170,11 @@ export default function NavbarSekolah(): ReactElement {
   const [isNavbarHidden, setIsNavbarHidden] = useState<boolean>(false);
   const [lastScrollY, setLastScrollY] = useState<number>(0);
   const navRef = useRef<HTMLDivElement>(null);
+
+  // Memeriksa status token autentikasi dari AuthContext
+  const { token, user } = useAuth();
+  const isLoggedIn = Boolean(token);
+  const isAdmin = user?.role === "admin";
 
   useEffect(() => {
     document.body.style.overflow = openDrawer ? "hidden" : "";
@@ -249,7 +262,11 @@ export default function NavbarSekolah(): ReactElement {
           className="w-full font-cabinet bg-transparent text-white"
         >
           <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 lg:px-8">
-            <Link to="/" aria-label="Beranda" className="flex shrink-0 items-center">
+            <Link
+              to="/"
+              aria-label="Beranda"
+              className="flex shrink-0 items-center"
+            >
               <img
                 src={logoSmk}
                 alt="Logo sekolah"
@@ -260,7 +277,9 @@ export default function NavbarSekolah(): ReactElement {
             <ul className="hidden items-center gap-1 lg:flex">
               {navbarData.map((item, index) => {
                 const isActive = activeIndex === index;
-                const hasChildren = Boolean(item.megaMenu && item.megaMenu.length > 0);
+                const hasChildren = Boolean(
+                  item.megaMenu && item.megaMenu.length > 0,
+                );
 
                 if (!hasChildren && item.href) {
                   return (
@@ -291,14 +310,16 @@ export default function NavbarSekolah(): ReactElement {
                       onClick={() => handleMenuClick(index)}
                       className={clsx(
                         "flex items-center gap-1 px-4 py-2 text-sm font-semibold tracking-wider transition-colors duration-200 rounded-lg",
-                        isActive ? "text-blue-400 bg-white/10" : "text-white hover:text-blue-400"
+                        isActive
+                          ? "text-blue-400 bg-white/10"
+                          : "text-white hover:text-blue-400",
                       )}
                     >
                       {item.title}
                       <FiChevronDown
                         className={clsx(
                           "text-sm transition-transform duration-300",
-                          isActive && "rotate-180"
+                          isActive && "rotate-180",
                         )}
                       />
                     </button>
@@ -362,11 +383,17 @@ export default function NavbarSekolah(): ReactElement {
 
             <div className="flex items-center gap-3">
               <Link
-                to="/login"
+                to={
+                  isLoggedIn
+                    ? isAdmin
+                      ? "/portal-panitia-spmb"
+                      : "/portal-siswa-spmb"
+                    : "/login"
+                }
                 className="hidden items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-600/20 sm:inline-flex hover:bg-blue-700 transition duration-200"
               >
                 <LuGraduationCap className="text-lg" />
-                Daftar SPMB
+                {isLoggedIn ? "Dashboard" : "Daftar SPMB"}
               </Link>
 
               <button
@@ -389,7 +416,12 @@ export default function NavbarSekolah(): ReactElement {
             initial={{ x: "150%", opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: "150%", opacity: 0 }}
-            transition={{ type: "spring", stiffness: 120, damping: 24, restDelta: 0.001 }}
+            transition={{
+              type: "spring",
+              stiffness: 120,
+              damping: 24,
+              restDelta: 0.001,
+            }}
             className="fixed top-5 right-5 lg:top-6 lg:right-8 z-50"
           >
             <button
@@ -409,12 +441,20 @@ export default function NavbarSekolah(): ReactElement {
             initial={{ x: "100%" }}
             animate={{ x: "0%" }}
             exit={{ x: "100%" }}
-            transition={{ type: "tween", ease: [0.76, 0, 0.24, 1], duration: 0.5 }}
+            transition={{
+              type: "tween",
+              ease: [0.76, 0, 0.24, 1],
+              duration: 0.5,
+            }}
             className="fixed inset-y-0 right-0 w-full sm:w-[450px] bg-[#095491] z-[999] text-white p-6 sm:p-10 flex flex-col justify-between shadow-2xl overflow-y-auto font-cabinet"
           >
             <div className="flex justify-between items-center w-full border-b border-white/20 pb-4">
               <div className="flex items-center gap-3">
-                <img src={logoSmk} alt="Logo SMK" className="h-8 w-auto brightness-0 invert" />
+                <img
+                  src={logoSmk}
+                  alt="Logo SMK"
+                  className="h-8 w-auto brightness-0 invert"
+                />
                 <span className="text-xs font-bold tracking-widest uppercase text-white">
                   SMK TI BALI GLOBAL BADUNG
                 </span>
@@ -433,7 +473,9 @@ export default function NavbarSekolah(): ReactElement {
               </span>
 
               {navbarData.map((item, idx) => {
-                const hasChildren = Boolean(item.megaMenu && item.megaMenu.length > 0);
+                const hasChildren = Boolean(
+                  item.megaMenu && item.megaMenu.length > 0,
+                );
                 const isExpanded = mobileExpanded === idx;
 
                 if (!hasChildren && item.href) {
@@ -461,7 +503,7 @@ export default function NavbarSekolah(): ReactElement {
                         size={22}
                         className={clsx(
                           "transition-transform duration-300 text-white",
-                          isExpanded && "rotate-45"
+                          isExpanded && "rotate-45",
                         )}
                       />
                     </button>
@@ -515,12 +557,18 @@ export default function NavbarSekolah(): ReactElement {
               })}
 
               <Link
-                to="/login"
+                to={
+                  isLoggedIn
+                    ? isAdmin
+                      ? "/portal-panitia-spmb"
+                      : "/portal-siswa-spmb"
+                    : "/login"
+                }
                 onClick={() => setOpenDrawer(false)}
                 className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-bold text-blue-600 shadow-xl hover:bg-blue-50 transition duration-200"
               >
                 <LuGraduationCap className="text-lg" />
-                Daftar SPMB Sekarang
+                {isLoggedIn ? "Dashboard" : "Daftar SPMB Sekarang"}
               </Link>
             </div>
 
@@ -529,10 +577,16 @@ export default function NavbarSekolah(): ReactElement {
                 Kontak Sekolah
               </span>
               <div className="flex flex-col sm:flex-row gap-3 text-xs text-white">
-                <a href="tel:+62361123456" className="flex items-center gap-1.5 hover:text-white/80 transition-colors">
+                <a
+                  href="tel:+62361123456"
+                  className="flex items-center gap-1.5 hover:text-white/80 transition-colors"
+                >
                   <FiPhone /> (0361) 123456
                 </a>
-                <a href="mailto:info@smktibaliglobalbadung.sch.id" className="flex items-center gap-1.5 hover:text-white/80 transition-colors">
+                <a
+                  href="mailto:info@smktibaliglobalbadung.sch.id"
+                  className="flex items-center gap-1.5 hover:text-white/80 transition-colors"
+                >
                   <FiMail /> info@smktibaliglobalbadung.sch.id
                 </a>
               </div>

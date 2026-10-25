@@ -150,7 +150,7 @@ export default function OtpForm() {
           <p className="text-xs text-gray-600 mb-6 px-2">
             Kami sudah mengirim kode OTP ke email{" "}
             <span className="font-semibold text-gray-800">
-              {email ? maskEmail(email) : "email Anda"}
+              {email ? maskEmail(email) : "email Data"}
             </span>
           </p>
 
@@ -178,7 +178,7 @@ export default function OtpForm() {
                   value={digit}
                   onChange={(e) => handleOtpChange(e.target.value, idx)}
                   onKeyDown={(e) => handleKeyDown(e, idx)}
-                  className="w-10 h-12 text-center text-lg font-bold border border-gray-400 rounded-md focus:outline-none focus:border-[#204382] focus:ring-1 focus:ring-[#204382]"
+                  className="w-10 h-12 text-center text-lg font-bold text-gray-900 border border-gray-400 rounded-md focus:outline-none focus:border-[#204382] focus:ring-1 focus:ring-[#204382]"
                 />
               ))}
             </div>

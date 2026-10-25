@@ -18,8 +18,12 @@ import ForgetPasswordForm from "./pages/auth/ForgetPasswordForm";
 import LoginForm from "./pages/auth/LoginForm";
 import OtpForm from "./pages/auth/OtpForm";
 import RegisterForm from "./pages/auth/RegisterForm";
+import RegisterPanitiaForm from "./pages/auth/RegisterPanitiaForm";
+import LoginPanitia from "./pages/auth/LoginPanitia";
+import ForgetPanitia from "./pages/auth/ForgetPanitia";
 import { PanitiaRoute } from "./pages/auth/PanitiaGuard";
 import BerandaAdmin from "./pages/dashboard/admin/beranda/BerandaAdmin";
+import TkSection from "./pages/website/majors/TkSection";
 
 interface PlaceholderPageProps {
   readonly title: string;
@@ -59,6 +63,9 @@ export default function App(): ReactElement {
         <Route path="/Majors/Dkv" element={<DkvSection />} />
         <Route path="/Majors/Tjkt" element={<TjktSection />} />
         <Route path="/Majors/Bd" element={<BdSection />} />
+        <Route path="/Majors/Tk" element={<TkSection/>} />
+
+
 
         <Route path="/StudentAffairs/Achievements" element={<PlaceholderPage title="Prestasi Siswa" />} />
         <Route path="/StudentAffairs/Extracurriculars" element={<PlaceholderPage title="Ekstrakurikuler" />} />
@@ -71,6 +78,9 @@ export default function App(): ReactElement {
 
       <Route path="/login" element={<LoginForm />} />
       <Route path="/register" element={<RegisterForm />} />
+      <Route path="/register-panitia" element={<RegisterPanitiaForm />} />
+      <Route path="/login-panitia" element={<LoginPanitia />} />
+      <Route path="/forget-panitia" element={<ForgetPanitia />} />
       <Route path="/forgot-password" element={<ForgetPasswordForm />} />
       <Route path="/otp" element={<OtpForm />} />
 
