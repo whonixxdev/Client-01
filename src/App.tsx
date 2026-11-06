@@ -80,7 +80,7 @@ export default function App(): ReactElement {
 
       <Route element={<DashboardLayout userRole="siswa" />}>
         <Route path="/siswa/dashboard" element={<BerandaSiswa />} />
-        <Route path="/formulirSiswa" element={<FormulirSiswaView />} />
+        <Route path="/formulir" element={<FormulirSiswaView />} />
       </Route>
 
       <Route element={<PanitiaRoute />}>

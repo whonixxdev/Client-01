@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_CADANGAN = 'http://localhost:3000';
+const BASE_CADANGAN = 'https://backend-spmb-smktibaliglobalbadung.vercel.app/';
 
 // Deteksi otomatis jika berjalan di Vercel atau production, atau ambil dari import.meta.env
 export const BASE_URL: string = (() => {
