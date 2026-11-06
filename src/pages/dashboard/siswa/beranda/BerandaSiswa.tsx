@@ -1,5 +1,5 @@
 import SupportCard from "../../../../components/ui/CardItems/CardSupport";
-import maskotImg from "../../../../assets/img/maskot.png";
+import maskotImg from "../../../../assets/img/maskot1.png";
 
 export default function BerandaSiswa() {
   return (

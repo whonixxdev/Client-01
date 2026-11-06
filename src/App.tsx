@@ -31,14 +31,18 @@ import { PanitiaRoute } from "./pages/auth/PanitiaGuard";
 import BerandaAdmin from "./pages/dashboard/admin/beranda/BerandaAdmin";
 import OrganizationalPage from "./pages/website/profile/rganizationalPage";
 import BerandaSiswa from "./pages/dashboard/siswa/beranda/BerandaSiswa";
+import FormulirSiswaView from "./pages/dashboard/siswa/FormulirSiswa/FormulirSiswaView";
 
 export default function App(): ReactElement {
   return (
     <Routes>
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
-        
-        <Route path="/Profile/Organizational" element={<OrganizationalPage />} />
+
+        <Route
+          path="/Profile/Organizational"
+          element={<OrganizationalPage />}
+        />
         <Route path="/Profile/Facilities" element={<FacilitiesPage />} />
         <Route path="/Profile/Accreditation" element={<AccreditationPage />} />
 
@@ -48,9 +52,18 @@ export default function App(): ReactElement {
         <Route path="/Majors/Bd" element={<BdSection />} />
         <Route path="/Majors/Tk" element={<TkSection />} />
 
-        <Route path="/StudentAffairs/Achievements" element={<AchievementsPage />} />
-        <Route path="/StudentAffairs/Extracurriculars" element={<ExtracurricularsPage />} />
-        <Route path="/StudentAffairs/Scholarships" element={<ScholarshipsPage />} />
+        <Route
+          path="/StudentAffairs/Achievements"
+          element={<AchievementsPage />}
+        />
+        <Route
+          path="/StudentAffairs/Extracurriculars"
+          element={<ExtracurricularsPage />}
+        />
+        <Route
+          path="/StudentAffairs/Scholarships"
+          element={<ScholarshipsPage />}
+        />
 
         <Route path="/access-denied" element={<AccessDenied />} />
         <Route path="/maintenance" element={<Maintenance />} />
@@ -67,7 +80,7 @@ export default function App(): ReactElement {
 
       <Route element={<DashboardLayout userRole="siswa" />}>
         <Route path="/siswa/dashboard" element={<BerandaSiswa />} />
-        {/* <Route path="" element={<BerandaSiswa />} /> */}
+        <Route path="/formulirSiswa" element={<FormulirSiswaView />} />
       </Route>
 
       <Route element={<PanitiaRoute />}>
