@@ -9,6 +9,11 @@ import {
   type PendaftaranSaya,
   type StatusVerifikasi,
 } from '../../../../services/Api';
+import {
+  ProgresBar,
+  ambilMasukanProgres,
+  hitungProgres,
+} from '../../../../components/ui/progresbar';
 import BiodataForm from './BiodataForm';
 
 const LABEL_STATUS: Record<StatusVerifikasi, string> = {
@@ -104,6 +109,7 @@ export default function FormulirSiswaView(): ReactElement {
   const statusFormulir = saya.biodata ? LABEL_STATUS[saya.biodata.statusFormulir] : 'Belum diisi';
   const biodataKurang = saya.kekurangan?.biodataKurang ?? [];
   const catatan = saya.catatanPanitia.slice(0, 3);
+  const progres = hitungProgres(ambilMasukanProgres(saya));
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6 p-4 sm:p-6">
@@ -124,19 +130,31 @@ export default function FormulirSiswaView(): ReactElement {
         </span>
       </header>
 
+      <ProgresBar hasil={progres} />
+
       {biodataKurang.length > 0 ? (
-        <div className="rounded-2xl border border-blue-300 bg-blue-50 p-5">
-          <p className="text-sm font-bold text-blue-900">Data yang masih perlu dilengkapi</p>
-          <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-blue-900">
+        <section className="rounded-2xl border border-blue-200 bg-blue-50 p-5">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-bold text-blue-900">Data yang masih perlu dilengkapi</p>
+            <span className="rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+              {biodataKurang.length} data
+            </span>
+          </div>
+          <ul className="mt-3 flex flex-wrap gap-2">
             {biodataKurang.map((item) => (
-              <li key={item}>{item}</li>
+              <li
+                key={item}
+                className="rounded-full border border-blue-200 bg-white px-3 py-1 text-xs font-medium text-blue-900"
+              >
+                {item}
+              </li>
             ))}
           </ul>
-        </div>
+        </section>
       ) : null}
 
       {catatan.length > 0 ? (
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center gap-2 text-sm font-bold text-blue-900">
             <MessageSquare className="h-4 w-4" />
             Catatan dari panitia
@@ -149,7 +167,7 @@ export default function FormulirSiswaView(): ReactElement {
               </li>
             ))}
           </ul>
-        </div>
+        </section>
       ) : null}
 
       <BiodataForm
@@ -158,6 +176,7 @@ export default function FormulirSiswaView(): ReactElement {
         namaAkun={namaAkun}
         bisaDiedit={saya.akses.biodataBisaDiedit}
         onTersimpan={segarkan}
+        onMuatUlang={segarkan}
       />
     </div>
   );

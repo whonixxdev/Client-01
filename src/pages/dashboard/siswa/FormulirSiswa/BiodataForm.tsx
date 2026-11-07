@@ -5,7 +5,17 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { Camera, CircleAlert, CircleCheck, LoaderCircle, Save, User } from 'lucide-react';
+import {
+  Camera,
+  CircleAlert,
+  CircleCheck,
+  FileText,
+  GraduationCap,
+  LoaderCircle,
+  Save,
+  User,
+  Users,
+} from 'lucide-react';
 import {
   ambilPesanError,
   getStorageUrl,
@@ -79,7 +89,24 @@ interface BiodataFormProps {
   namaAkun: string;
   bisaDiedit: boolean;
   onTersimpan: () => void;
+  onMuatUlang?: () => void;
 }
+
+const BIDANG_PENTING: NamaBidang[] = [
+  'namaLengkap',
+  'nik',
+  'nisn',
+  'jenisKelamin',
+  'agama',
+  'tempatLahir',
+  'tanggalLahir',
+  'alamat',
+  'namaAyah',
+  'namaIbu',
+  'asalSmp',
+  'jurusanId',
+  'jurusanCadanganId',
+];
 
 const hanyaAngka = (nilai: string): string => nilai.replace(/\D/g, '');
 const nomorTelepon = (nilai: string): string => nilai.replace(/[^\d+]/g, '');
@@ -105,6 +132,15 @@ const teksAtauUndefined = (nilai: string): string | undefined => {
 
 const cariPilihan = <T extends string>(daftar: readonly T[], nilai: string): T | undefined =>
   daftar.find((item) => item === nilai);
+
+const hitungKelengkapan = (nilai: NilaiForm): { terisi: number; total: number } => {
+  const terisiBiasa = BIDANG_PENTING.filter((nama) => nilai[nama].trim() !== '').length;
+  const adaNomorOrangTua = nilai.noHpAyah.trim() !== '' || nilai.noHpIbu.trim() !== '';
+  return {
+    terisi: terisiBiasa + (adaNomorOrangTua ? 1 : 0),
+    total: BIDANG_PENTING.length + 1,
+  };
+};
 
 const buatNilaiAwal = (biodata: BiodataSiswa | null, namaAkun: string): NilaiForm => ({
   namaLengkap: biodata?.namaLengkap ?? namaAkun,
@@ -201,21 +237,28 @@ function Pemberitahuan({ pesan }: { pesan: PesanForm | null }): ReactElement | n
 }
 
 function Seksi({
+  ikon,
   judul,
   deskripsi,
   children,
 }: {
+  ikon: ReactNode;
   judul: string;
   deskripsi: string;
   children: ReactNode;
 }): ReactElement {
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-      <div className="mb-5 border-b border-slate-100 pb-4">
-        <h2 className="text-base font-bold text-blue-900">{judul}</h2>
-        <p className="mt-1 text-sm text-slate-500">{deskripsi}</p>
+    <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="flex items-start gap-3 border-b border-slate-100 bg-slate-50 px-5 py-4 sm:px-6">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white">
+          {ikon}
+        </span>
+        <div>
+          <h2 className="text-base font-bold text-blue-900">{judul}</h2>
+          <p className="mt-0.5 text-sm text-slate-500">{deskripsi}</p>
+        </div>
       </div>
-      {children}
+      <div className="p-5 sm:p-6">{children}</div>
     </section>
   );
 }
@@ -259,6 +302,7 @@ export default function BiodataForm({
   namaAkun,
   bisaDiedit,
   onTersimpan,
+  onMuatUlang,
 }: BiodataFormProps): ReactElement {
   const [nilai, setNilai] = useState<NilaiForm>(() => buatNilaiAwal(biodata, namaAkun));
   const [galat, setGalat] = useState<GalatBidang>({});
@@ -288,7 +332,7 @@ export default function BiodataForm({
   };
 
   const kelasKontrol = (nama: NamaBidang): string =>
-    `w-full rounded-lg border px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500 ${
+    `w-full rounded-xl border px-3.5 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500 ${
       galat[nama] ? 'border-blue-900 bg-blue-50' : 'border-slate-300 bg-white'
     }`;
 
@@ -326,6 +370,7 @@ export default function BiodataForm({
         id={nama}
         name={nama}
         value={nilai[nama]}
+        disabled={daftar.length === 0}
         onChange={(event) =>
           saatUbah ? saatUbah(event.target.value) : ubah(nama, event.target.value)
         }
@@ -345,6 +390,13 @@ export default function BiodataForm({
   const jurusanTersedia = jurusan.filter(
     (item) => item.aktif || item.id === nilai.jurusanId || item.id === nilai.jurusanCadanganId,
   );
+
+  const pesanJurusan =
+    jurusan.length === 0
+      ? 'Daftar jurusan belum tersedia dari server. Silakan muat ulang atau hubungi panitia.'
+      : jurusanTersedia.length === 0
+        ? 'Belum ada jurusan yang dibuka untuk pendaftaran. Hubungi panitia untuk informasi lebih lanjut.'
+        : null;
 
   const labelJurusan = (item: Jurusan): string =>
     item.sisaKuota > 0
@@ -366,6 +418,9 @@ export default function BiodataForm({
       ? `Biaya pendaftaran: ${formatRupiah(jurusanDipilih.biayaPendaftaran)}`
       : 'Kuota jurusan ini penuh. Pastikan jurusan cadangan sudah dipilih.'
     : undefined;
+
+  const kelengkapan = hitungKelengkapan(nilai);
+  const persenKelengkapan = Math.round((kelengkapan.terisi / kelengkapan.total) * 100);
 
   const pilihFoto = async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
     const berkas = event.target.files?.[0];
@@ -431,17 +486,21 @@ export default function BiodataForm({
       ) : null}
 
       <fieldset disabled={!bisaDiedit} className="min-w-0 space-y-6 border-0 p-0">
-        <Seksi judul="Foto Siswa" deskripsi="Gunakan pas foto yang jelas dan terbaru.">
-          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-blue-200 bg-blue-50">
+        <Seksi
+          ikon={<Camera className="h-5 w-5" />}
+          judul="Foto Siswa"
+          deskripsi="Gunakan pas foto yang jelas dan terbaru."
+        >
+          <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
+            <div className="flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-full border-4 border-blue-100 bg-blue-50">
               {avatarTampil ? (
                 <img src={avatarTampil} alt="Foto siswa" className="h-full w-full object-cover" />
               ) : (
-                <User className="h-10 w-10 text-blue-400" />
+                <User className="h-12 w-12 text-blue-300" />
               )}
             </div>
-            <div className="space-y-2">
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-blue-600 px-4 py-2 text-sm font-semibold text-blue-700 transition focus-within:ring-2 focus-within:ring-blue-300 hover:bg-blue-50 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+            <div className="space-y-3">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-blue-600 px-4 py-2.5 text-sm font-semibold text-blue-700 transition focus-within:ring-2 focus-within:ring-blue-300 hover:bg-blue-50 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
                 {mengunggah ? (
                   <LoaderCircle className="h-4 w-4 animate-spin" />
                 ) : (
@@ -456,13 +515,20 @@ export default function BiodataForm({
                   onChange={(event) => void pilihFoto(event)}
                 />
               </label>
-              <p className="text-xs text-slate-500">Format JPG, PNG, atau WebP. Maksimal 2 MB.</p>
+              <ul className="space-y-0.5 text-xs text-slate-500">
+                <li>Format JPG, PNG, atau WebP, maksimal 2 MB.</li>
+                <li>Wajah terlihat jelas dengan latar polos.</li>
+              </ul>
               <Pemberitahuan pesan={pesanFoto} />
             </div>
           </div>
         </Seksi>
 
-        <Seksi judul="Data Pribadi" deskripsi="Isi sesuai dokumen resmi seperti Kartu Keluarga dan akta kelahiran.">
+        <Seksi
+          ikon={<FileText className="h-5 w-5" />}
+          judul="Data Pribadi"
+          deskripsi="Isi sesuai dokumen resmi seperti Kartu Keluarga dan akta kelahiran."
+        >
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <Bidang
               id="namaLengkap"
@@ -528,7 +594,11 @@ export default function BiodataForm({
           </div>
         </Seksi>
 
-        <Seksi judul="Data Orang Tua" deskripsi="Nomor HP orang tua dipakai panitia untuk menghubungi jika diperlukan.">
+        <Seksi
+          ikon={<Users className="h-5 w-5" />}
+          judul="Data Orang Tua"
+          deskripsi="Nomor HP orang tua dipakai panitia untuk menghubungi jika diperlukan."
+        >
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {bidangTeks('namaAyah', 'Nama ayah')}
             {bidangTeks('noHpAyah', 'Nomor HP ayah', {
@@ -548,11 +618,29 @@ export default function BiodataForm({
         </Seksi>
 
         <Seksi
+          ikon={<GraduationCap className="h-5 w-5" />}
           judul="Asal Sekolah dan Pilihan Jurusan"
           deskripsi="Jurusan cadangan dipakai jika kuota jurusan utama sudah penuh."
         >
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="md:col-span-2">{bidangTeks('asalSmp', 'Asal SMP/MTs')}</div>
+            {pesanJurusan ? (
+              <div
+                role="alert"
+                className="flex flex-col gap-3 rounded-xl border border-blue-900 bg-blue-100 p-4 text-sm text-blue-950 sm:flex-row sm:items-center sm:justify-between md:col-span-2"
+              >
+                <span className="font-medium">{pesanJurusan}</span>
+                {onMuatUlang ? (
+                  <button
+                    type="button"
+                    onClick={onMuatUlang}
+                    className="w-fit shrink-0 rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
+                  >
+                    Muat ulang jurusan
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
             {bidangPilihan(
               'jurusanId',
               'Jurusan utama',
@@ -568,11 +656,25 @@ export default function BiodataForm({
 
       <Pemberitahuan pesan={pesan} />
 
-      <div className="flex justify-end">
+      <div className="sticky bottom-4 z-10 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-3 text-xs font-semibold text-slate-600">
+            <span>Kelengkapan biodata</span>
+            <span>
+              {kelengkapan.terisi} dari {kelengkapan.total} data terisi
+            </span>
+          </div>
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
+            <div
+              className="h-full rounded-full bg-blue-600 transition-all duration-300"
+              style={{ width: `${persenKelengkapan}%` }}
+            />
+          </div>
+        </div>
         <button
           type="submit"
           disabled={!bisaDiedit || menyimpan}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:cursor-not-allowed disabled:bg-slate-300 sm:w-auto"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:cursor-not-allowed disabled:bg-slate-300 sm:w-auto"
         >
           {menyimpan ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           {menyimpan ? 'Menyimpan...' : 'Simpan biodata'}
